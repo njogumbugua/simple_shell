@@ -1,10 +1,10 @@
 #include "shell.h"
+
 int main(void)
 {
   while (1)
   {
-    display_prompt();
+    prompt_display();
   }
-
   return(0);
 }
