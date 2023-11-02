@@ -1,15 +1,13 @@
 #include "shell.h"
 #include <stdio.h>
 
-void dispay_prompt()
+void prompt_display()
 {
   size_t n = 10;/*arbitrary length*/
   char *buf = NULL;
 
   printf("$ ");
   getline(&buf, &n, stdin);
-  printf("%s", buf);/*printf is for debugging purposes*/
-  tokenize(buf);
 }
 
 
@@ -23,3 +21,4 @@ void tokenize(char *commands)
       pCommands = strtok(NULL, " ");
   }
 }
+
