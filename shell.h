@@ -5,6 +5,6 @@
 #include <string.h>
 #include <unistd.h>
 
-void tokenize(char *commands);
 void prompt_display();
+void tokenize(char *commands);
 #endif
