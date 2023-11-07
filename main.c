@@ -2,9 +2,6 @@
 
 int main(void)
 {
-  while (1)
-  {
-    prompt_display();
-  }
+  start_shell();
   return(0);
 }
