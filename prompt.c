@@ -5,26 +5,27 @@
 
 void start_shell()
 {
-  char *line;
+  char *input;
   char **commands;
+
   while (1)
   {
     printf("$ ");
-    line = read_commands();
-    commands = tokenize_commands(line);
+    input = read_commands();
+    commands = tokenize_commands(input);
     execute_commands(commands);
 
-    free(line);
+    free(input);
     free(commands);
   }
 }
 
 char *read_commands()
 {
-  char *line = NULL;
+  char *input = NULL;
   size_t bufsize = 0;
 
-  if (getline(&line, &bufsize, stdin) == -1){
+  if (getline(&input, &bufsize, stdin) == -1){
     if (feof(stdin)) {
       exit(EXIT_SUCCESS);
     } else  {
@@ -33,11 +34,9 @@ char *read_commands()
     }
   }
 
-  return (line);
+  return (input);
 }
 
-#define LSH_TOK_BUFSIZE 64
-#define LSH_TOK_DELIM " \t\r\n\a"
 char **tokenize_commands(char *line)
 {
   int bufsize = LSH_TOK_BUFSIZE, position = 0;
@@ -45,7 +44,7 @@ char **tokenize_commands(char *line)
   char *token;
 
   if (!tokens) {
-    fprintf(stderr, "lsh: allocation error\n");
+    fprintf(stderr, "allocation error\n");
     exit(EXIT_FAILURE);
   }
 
@@ -58,7 +57,7 @@ char **tokenize_commands(char *line)
       bufsize += LSH_TOK_BUFSIZE;
       tokens = realloc(tokens, bufsize * sizeof(char*));
       if (!tokens) {
-        fprintf(stderr, "lsh: allocation error\n");
+        fprintf(stderr, " allocation error\n");
         exit(EXIT_FAILURE);
       }
     }
@@ -74,16 +73,22 @@ int execute_commands(char **commands)
   pid_t pid;
 
   pid = fork();
-  if (pid == 0) {
-    if (execvp(commands[0], commands) == -1) {
-      perror("lsh");
+  if (pid == 0)
+  {
+      char *args[2];
+      char *envp[1];
+
+    args[0] = *commands;
+    args[1] = NULL;
+    envp[0] = NULL;
+
+    if (execve(args[0], args, envp) == -1)
+    {
+      perror("Error");
     }
     exit(EXIT_FAILURE);
   } else if (pid != 0) {
-
-    perror("lsh");
-  } else {
-    wait(NULL);
+    wait(&pid);
   }
 
   return (1);
