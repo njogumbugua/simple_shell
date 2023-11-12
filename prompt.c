@@ -1,29 +1,14 @@
 #include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-void start_shell()
-{
-  char *input;
-  char **commands;
-  char *prompt = "$ ";
-
-  while (1)
-  {
-    write(STDOUT_FILENO, prompt, 2);
-    input = read_commands();
-    commands = tokenize_commands(input);
-    execute_commands(commands);
-
-    free(input);
-    free(commands);
-  }
-}
 
 char *read_commands()
 {
   char *input = NULL;
+  int i;
   size_t bufsize = 0;
   int bytes;
   bytes = getline(&input, &bufsize, stdin);
@@ -38,8 +23,21 @@ char *read_commands()
       exit(EXIT_FAILURE);
     }
   }
-  if (input[bytes - 1] == '\n')
-    input[bytes - 1] = '\0';
+
+  i = 0;
+  while (input[i])
+  {
+    if (input[i] == '\n')
+    {
+      input[i] = '\0';
+    }
+    i++;
+  }
+
+  if (strcmp(input, "exit") == 0)
+  {
+    exit(EXIT_SUCCESS);
+  }
 
   return (input);
 }
@@ -56,14 +54,17 @@ char **tokenize_commands(char *line)
   }
 
   token = strtok(line, TOKEN_DELIM);
-  while (token != NULL) {
+  while (token != NULL)
+  {
     tokens[position] = token;
     position++;
 
-    if (position >= bufsize) {
+    if (position >= bufsize)
+    {
       bufsize += TOKEN_BUFSIZE;
       tokens = realloc(tokens, bufsize * sizeof(char*));
-      if (!tokens) {
+      if (!tokens)
+      {
         perror("allocation error");
         exit(EXIT_FAILURE);
       }
@@ -78,26 +79,26 @@ char **tokenize_commands(char *line)
 int execute_commands(char **commands)
 {
   pid_t pid;
+  char *envp[1];
+  int i;
 
-  pid = fork();
-  if (pid == 0)
+  if(!file_exists(*commands))
   {
-      char *args[2];
-      char *envp[2];
-
-    args[0] = *commands;
-    args[1] = NULL;
-    envp[0] = "PATH=/bin";
-    envp[1] = NULL;
-
-    if (execve(args[0], args, envp) == -1)
-    {
-      perror("Error");
-    }
-    exit(EXIT_FAILURE);
-  } else if (pid != 0) {
-    wait(&pid);
+    perror("error");
   }
+  for (i = 0; commands[i] != NULL; i++)
+  {
+    pid = fork();
+    envp[0] = NULL;
+    if (pid == 0)
+    {
+      execve(commands[i], commands, envp);
+
+    } else if (pid != 0) {
+      wait(&pid);
+    }
+  }
+
 
   return (1);
 }
