@@ -13,6 +13,12 @@ while (1)
       write(STDOUT_FILENO, prompt, 2);
     }
     input = read_commands();
+
+    if (strcmp(input, "exit") == 0)
+    {
+      break;
+    }
+    
     commands = tokenize_commands(input);
     execute_commands(commands);
 
