@@ -34,11 +34,6 @@ char *read_commands()
     i++;
   }
 
-  if (strcmp(input, "exit") == 0)
-  {
-    exit(EXIT_SUCCESS);
-  }
-
   return (input);
 }
 
@@ -79,27 +74,36 @@ char **tokenize_commands(char *line)
 int execute_commands(char **commands)
 {
   pid_t pid;
-  char *envp[1];
   int i;
 
-  if(!file_exists(*commands))
-  {
-    perror("error");
-  }
+
   for (i = 0; commands[i] != NULL; i++)
   {
     pid = fork();
-    envp[0] = NULL;
     if (pid == 0)
     {
-      execve(commands[i], commands, envp);
+      char *path = getenv("PATH");
+      char *token = strtok(path, ":");
 
-    } else if (pid != 0) {
+      while (token != NULL)
+      {
+          char *full_path = malloc(strlen(token) + strlen("/") + strlen(commands[i]) + 1);
+          strcpy(full_path, token);
+          strcat(full_path, "/");
+          strcat(full_path, commands[i]);
+
+        if (file_exists(full_path))
+            execve(full_path, commands, NULL);
+
+          free(full_path);
+          token = strtok(NULL, ":");
+      }
+      exit(EXIT_SUCCESS);
+    } else if (pid != 0) 
+    {
       wait(&pid);
     }
   }
-
-
   return (1);
 }
 
