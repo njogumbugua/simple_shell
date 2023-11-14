@@ -14,7 +14,7 @@ while (1)
     }
     input = read_commands();
 
-    if (strcmp(input, "exit") == 0)
+    if (str_cmp(input, "exit") == 0)
     {
       break;
     }
