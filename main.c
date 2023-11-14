@@ -1,7 +1,26 @@
-#include "shell.h"
+char *input;
+char **commands;
+char *prompt = "$ ";
 
-int main(void)
+while (1)
 {
-start_shell();
-return (0);
+if (isatty(STDIN_FILENO))
+{
+write(STDOUT_FILENO, prompt, 2);
+}
+input = read_commands();
+
+if (str_cmp(input, "exit") == 0)
+{
+break;
+}
+
+commands = tokenize_commands(input);
+execute_commands(commands);
+
+free(input);
+free(commands);
+}
+
+return(0);
 }

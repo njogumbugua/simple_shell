@@ -1,7 +1,10 @@
-#include "shell.h"
+#include <stdbool.h>
 
-int file_exists(const char *filename)
+bool file_exists(const char *path)
 {
-struct stat buffer;
-return (stat(filename, &buffer) == 0);
+if (access(path, F_OK) != -1)
+{
+return (true);
+}
+return (false);
 }

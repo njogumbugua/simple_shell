@@ -1,8 +1,10 @@
 #include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
+<<<<<<< HEAD
 void start_shell()
 {
 <<<<<<< HEAD
@@ -36,6 +38,8 @@ free(commands);
   }
 >>>>>>> c111305a3b940e238407ffd46a76cc870698852b
 }
+=======
+>>>>>>> e411b18445ac18323938ef9c8fda602a908dabb6
 
 char *read_commands()
 {
@@ -55,6 +59,7 @@ exit(EXIT_FAILURE);
 return (input);
 =======
   char *input = NULL;
+  int i;
   size_t bufsize = 0;
   int bytes;
   bytes = getline(&input, &bufsize, stdin);
@@ -69,8 +74,16 @@ return (input);
       exit(EXIT_FAILURE);
     }
   }
-  if (input[bytes - 1] == '\n')
-    input[bytes - 1] = '\0';
+
+  i = 0;
+  while (input[i])
+  {
+    if (input[i] == '\n')
+    {
+      input[i] = '\0';
+    }
+    i++;
+  }
 
   return (input);
 >>>>>>> c111305a3b940e238407ffd46a76cc870698852b
@@ -111,20 +124,24 @@ return (tokens);
   char **tokens = malloc(bufsize * sizeof(char*));
   char *token;
 
-  if (!tokens) {
+  if (!tokens)
+  {
     perror("allocation error");
     exit(EXIT_FAILURE);
   }
 
   token = strtok(line, TOKEN_DELIM);
-  while (token != NULL) {
+  while (token != NULL)
+  {
     tokens[position] = token;
     position++;
 
-    if (position >= bufsize) {
+    if (position >= bufsize)
+    {
       bufsize += TOKEN_BUFSIZE;
       tokens = realloc(tokens, bufsize * sizeof(char*));
-      if (!tokens) {
+      if (!tokens)
+      {
         perror("allocation error");
         exit(EXIT_FAILURE);
       }
@@ -143,27 +160,37 @@ int execute_commands(char **commands)
 pid_t pid;
 =======
   pid_t pid;
+  int i;
 
-  pid = fork();
-  if (pid == 0)
+  for (i = 0; commands[i] != NULL; i++)
   {
-      char *args[2];
-      char *envp[2];
-
-    args[0] = *commands;
-    args[1] = NULL;
-    envp[0] = "PATH=/bin";
-    envp[1] = NULL;
-
-    if (execve(args[0], args, envp) == -1)
+    pid = fork();
+    if (pid == 0)
     {
-      perror("Error");
-    }
-    exit(EXIT_FAILURE);
-  } else if (pid != 0) {
-    wait(&pid);
-  }
+      char *path = getenv("PATH");
+      char *token = strtok(path, ":");
 
+      while (token != NULL)
+      {
+        char *full_path = malloc(strlen(token) + strlen("/") + strlen(commands[i]) + 1);
+        strcpy(full_path, token);
+        strcat(full_path, "/");
+        strcat(full_path, commands[i]);
+
+        if (file_exists(full_path))
+        {
+          execve(full_path, commands, NULL);
+        }
+
+          free(full_path);
+          token = strtok(NULL, ":");
+      }
+      exit(EXIT_FAILURE);
+    } else if (pid != 0)
+    {
+      wait(&pid);
+    }
+  }
   return (1);
 }
 >>>>>>> c111305a3b940e238407ffd46a76cc870698852b
