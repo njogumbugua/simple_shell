@@ -43,7 +43,8 @@ char **tokenize_commands(char *line)
   char **tokens = malloc(bufsize * sizeof(char*));
   char *token;
 
-  if (!tokens) {
+  if (!tokens)
+  {
     perror("allocation error");
     exit(EXIT_FAILURE);
   }
@@ -76,7 +77,6 @@ int execute_commands(char **commands)
   pid_t pid;
   int i;
 
-
   for (i = 0; commands[i] != NULL; i++)
   {
     pid = fork();
@@ -87,19 +87,21 @@ int execute_commands(char **commands)
 
       while (token != NULL)
       {
-          char *full_path = malloc(strlen(token) + strlen("/") + strlen(commands[i]) + 1);
-          strcpy(full_path, token);
-          strcat(full_path, "/");
-          strcat(full_path, commands[i]);
+        char *full_path = malloc(strlen(token) + strlen("/") + strlen(commands[i]) + 1);
+        strcpy(full_path, token);
+        strcat(full_path, "/");
+        strcat(full_path, commands[i]);
 
         if (file_exists(full_path))
-            execve(full_path, commands, NULL);
+        {
+          execve(full_path, commands, NULL);
+        }
 
           free(full_path);
           token = strtok(NULL, ":");
       }
-      exit(EXIT_SUCCESS);
-    } else if (pid != 0) 
+      exit(EXIT_FAILURE);
+    } else if (pid != 0)
     {
       wait(&pid);
     }
