@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdarg.h>
 
 #define TOKEN_BUFSIZE 64
 #define TOKEN_DELIM " \t \r \n \a"
@@ -22,5 +23,11 @@ bool file_exists(const char *filename);
 int exit_shell();
 int str_cmp(const char *str1, const char *str2);
 char **search_path(char *path);
+void print_environment();
+size_t str_len(const char *str);
+char *str_cat(char *destination, const char *source);
+char* str_cpy(char *dest, const char *src);
+void handle_path(char **commands, char *path);
+void print_f(const char *format, ...);
 
 #endif
