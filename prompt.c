@@ -76,30 +76,13 @@ int execute_commands(char **commands)
 {
   pid_t pid;
   int i;
-
   for (i = 0; commands[i] != NULL; i++)
   {
     pid = fork();
     if (pid == 0)
     {
       char *path = getenv("PATH");
-      char *token = strtok(path, ":");
-
-      while (token != NULL)
-      {
-        char *full_path = malloc(strlen(token) + strlen("/") + strlen(commands[i]) + 1);
-        strcpy(full_path, token);
-        strcat(full_path, "/");
-        strcat(full_path, commands[i]);
-
-        if (file_exists(full_path))
-        {
-          execve(full_path, commands, NULL);
-        }
-
-          free(full_path);
-          token = strtok(NULL, ":");
-      }
+      handle_path(commands + i, path);
       exit(EXIT_FAILURE);
     } else if (pid != 0)
     {
