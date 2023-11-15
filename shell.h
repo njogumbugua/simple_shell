@@ -22,5 +22,6 @@ bool file_exists(const char *filename);
 int exit_shell();
 int str_cmp(const char *str1, const char *str2);
 char **search_path(char *path);
+void print_environment();
 
 #endif
