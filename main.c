@@ -1,15 +1,13 @@
 #include "shell.h"
 
-int main()
+int main(void)
 {
   char *input;
   char **commands;
   char *prompt = "$ ";
 
-while (1)
-  {
-    if (isatty(STDIN_FILENO))
-    {
+  while (1) {
+    if (isatty(STDIN_FILENO)) {
       write(STDOUT_FILENO, prompt, 2);
     }
     input = read_commands();
@@ -18,7 +16,12 @@ while (1)
     {
       break;
     }
-    
+
+    if (str_cmp(input, "env") == 0)
+    {
+      print_environment();
+    }
+
     commands = tokenize_commands(input);
     execute_commands(commands);
 
@@ -26,5 +29,5 @@ while (1)
     free(commands);
   }
 
-  return(0);
+  return (0);
 }
