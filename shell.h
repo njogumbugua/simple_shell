@@ -20,13 +20,12 @@ char **tokenize_commands(char *line);
 int execute_commands(char **command);
 int change_dir(char **args);
 bool file_exists(const char *filename);
-int exit_shell();
 int str_cmp(const char *str1, const char *str2);
 char **search_path(char *path);
-void print_environment();
+void print_environment(void);
 size_t str_len(const char *str);
 char *str_cat(char *destination, const char *source);
-char* str_cpy(char *dest, const char *src);
+char *str_cpy(char *dest, const char *src);
 void handle_path(char **commands, char *path);
 void print_f(const char *format, ...);
 
