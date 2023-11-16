@@ -1,6 +1,11 @@
 #include "shell.h"
 #include <stdio.h>
 
+/**
+ * read_commands - read input from user
+ *
+ * Return: input from user
+ */
 char *read_commands()
 {
 char *input = NULL;
@@ -28,6 +33,13 @@ input[bytes - 1] = '\0';
 return (input);
 }
 
+/**
+ * tokenize_commands - tokenize user input
+ *
+ * @line: input from user
+ *
+ * Return: tokenized user input
+ */
 char **tokenize_commands(char *line)
 {
 int bufsize = TOKEN_BUFSIZE, position = 0;
@@ -49,8 +61,9 @@ position++;
 if (position >= bufsize)
 {
 bufsize += TOKEN_BUFSIZE;
-tokens = realloc(tokens, bufsize * sizeof(char *));
-if (!tokens) {
+tokens = realloc(tokens, bufsize *sizeof(char *));
+if (!tokens)
+{
 perror("allocation error\n");
 exit(EXIT_FAILURE);
 }
@@ -62,6 +75,13 @@ tokens[position] = NULL;
 return (tokens);
 }
 
+/**
+ * execute_commands - execute input from user
+ *
+ * @commands: tokenized user input
+ *
+ * Return: 1 on success
+ */
 int execute_commands(char **commands)
 {
 pid_t pid;
