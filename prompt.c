@@ -1,15 +1,18 @@
 #include "shell.h"
-#include <stdlib.h>
+#include <stdio.h>
 
 char *read_commands()
 {
 char *input = NULL;
 size_t bufsize = 0;
+ssize_t bytes;
 
-if (getline(&input, &bufsize, stdin) == -1)
+bytes = getline(&input, &bufsize, stdin);
+if (bytes == -1)
 {
 if (feof(stdin))
 {
+free(input);
 exit(EXIT_SUCCESS);
 }
 else
@@ -18,9 +21,9 @@ perror("readline");
 exit(EXIT_FAILURE);
 }
 }
-if (input[bufsize - 1] == '\n')
+if (input[bytes - 1] == '\n')
 {
-input[bufsize - 1] = '\0';
+input[bytes - 1] = '\0';
 }
 return (input);
 }
