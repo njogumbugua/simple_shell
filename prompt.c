@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <stdlib.h>
 
 char *read_commands()
 {
@@ -16,6 +17,10 @@ else
 perror("readline");
 exit(EXIT_FAILURE);
 }
+}
+if (input[bufsize - 1] == '\n')
+{
+input[bufsize - 1] = '\0';
 }
 return (input);
 }
@@ -65,7 +70,7 @@ if (pid == 0)
 {
 char *path = getenv("PATH");
 handle_path(commands + i, path);
-exit(EXIT_FAILURE);
+exit(EXIT_SUCCESS);
 }
 else if (pid != 0)
 {
