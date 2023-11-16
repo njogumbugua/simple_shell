@@ -5,6 +5,7 @@ int main(void)
 char *input;
 char **commands;
 char *prompt = "$ ";
+
 while (1)
 {
 if (isatty(STDIN_FILENO))
