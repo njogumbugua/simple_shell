@@ -79,8 +79,8 @@ return (tokens);
  * execute_commands - execute input from user
  *
  * @commands: tokenized user input
- *
- * Return: 1 on success
+ * 
+ * Return: 1 on success;
  */
 int execute_commands(char **commands)
 {
@@ -89,6 +89,11 @@ int i;
 for (i = 0; commands[i] != NULL; i++)
 {
 pid = fork();
+if (pid == -1)
+{
+perror("fork");
+exit(EXIT_FAILURE);
+}
 if (pid == 0)
 {
 char *path = getenv("PATH");
