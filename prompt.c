@@ -1,5 +1,4 @@
 #include "shell.h"
-#include <stdio.h>
 
 char *read_commands()
 {
