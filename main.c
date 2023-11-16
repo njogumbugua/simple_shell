@@ -1,5 +1,10 @@
 #include "shell.h"
 
+/**
+ * main - start of function
+ *
+ * Return: 0 on success
+ */
 int main(void)
 {
 char *input;
