@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <stdlib.h>
 
 /**
  * handle_path - handle path env
@@ -26,5 +27,5 @@ execve(full_path, commands, NULL);
 free(full_path);
 token = strtok(NULL, ":");
 }
-exit(EXIT_FAILURE);
+exit(EXIT_SUCCESS);
 }
