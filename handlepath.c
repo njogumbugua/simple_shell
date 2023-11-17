@@ -26,6 +26,5 @@ execve(full_path, commands, NULL);
 free(full_path);
 token = strtok(NULL, ":");
 }
-print_f("command not found: %s\n", commands[0]);
 exit(EXIT_FAILURE);
 }
