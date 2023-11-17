@@ -1,5 +1,4 @@
 #include "shell.h"
-#include <stdio.h>
 
 /**
  * read_commands - read input from user
@@ -79,31 +78,47 @@ return (tokens);
  * execute_commands - execute input from user
  *
  * @commands: tokenized user input
- * 
+ *
  * Return: 1 on success;
  */
 int execute_commands(char **commands)
 {
-pid_t pid;
 int i;
+pid_t pid;
+char *full_path;
+
 for (i = 0; commands[i] != NULL; i++)
 {
+full_path = handle_path(commands[i]);
+
+if (full_path == NULL)
+{
+fprintf(stderr, "Command '%s' not found\n", commands[i]);
+continue;
+}
+
 pid = fork();
+
 if (pid == -1)
 {
 perror("fork");
 exit(EXIT_FAILURE);
 }
-if (pid == 0)
+else if (pid == 0)
 {
-char *path = getenv("PATH");
-handle_path(commands + i, path);
-exit(EXIT_SUCCESS);
+execve(full_path, commands, NULL);
+perror("execve");
+
+exit(EXIT_FAILURE);
 }
-else if (pid != 0)
+else
 {
-wait(&pid);
+waitpid(pid, NULL, 0);
+
+free(full_path);
 }
 }
+
 return (1);
 }
+
