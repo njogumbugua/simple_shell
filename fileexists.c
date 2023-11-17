@@ -7,11 +7,7 @@
  *
  * Return: true if command exists else false
  */
-bool file_exists(const char *path)
+int file_exists(const char *path)
 {
-if (access(path, F_OK) != -1)
-{
-return (true);
-}
-return (false);
+    return access(path, F_OK) != -1;
 }
