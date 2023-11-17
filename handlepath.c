@@ -1,31 +1,50 @@
 #include "shell.h"
-#include <stdlib.h>
 
 /**
  * handle_path - handle path env
  *
- * @commands: tokenized commands
+ * @command: tokenized commands
  *
- * @path: path environment variable
  */
-void handle_path(char **commands, char *path)
+
+char *handle_path(const char *command)
 {
-char *token = strtok(path, ":");
+char *path_copy;
+char *path = getenv("PATH");
+char *token;
+char *full_path;
+
+if (path == NULL)
+{
+perror("getenv");
+exit(EXIT_FAILURE);
+}
+path_copy = strdup(path);
+token = strtok(path_copy, ":");
+full_path = NULL;
 
 while (token != NULL)
 {
-char *full_path =
-malloc(str_len(token) + str_len("/") + str_len(commands[0]) + 1);
-str_cpy(full_path, token);
-str_cat(full_path, "/");
-str_cat(full_path, commands[0]);
+full_path = malloc(strlen(token) + strlen("/") + strlen(command) + 1);
+if (full_path == NULL)
+{
+perror("malloc");
+exit(EXIT_FAILURE);
+}
+
+strcpy(full_path, token);
+strcat(full_path, "/");
+strcat(full_path, command);
 
 if (file_exists(full_path))
 {
-execve(full_path, commands, NULL);
+free(path_copy);
+return (full_path);
 }
 free(full_path);
+full_path = NULL;
 token = strtok(NULL, ":");
 }
-exit(EXIT_SUCCESS);
+free(path_copy);
+return strdup(command);
 }
