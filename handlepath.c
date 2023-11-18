@@ -5,6 +5,8 @@
  *
  * @command: tokenized commands
  *
+ * Return: command in path
+ *
  */
 
 char *handle_path(const char *command)
@@ -46,5 +48,5 @@ full_path = NULL;
 token = strtok(NULL, ":");
 }
 free(path_copy);
-return strdup(command);
+return (strdup(command));
 }
